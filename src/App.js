@@ -1,17 +1,11 @@
 import { useEffect, useState } from "react";
-
+import { dataCars } from "./data/cars"
 import './App.css';
 
 function App() {
 
-  const dataCars = [
-    {make: 'Volvo', model: 'v40'},
-    {make: 'Ferrari', model: 'f50'}
-  ]
-  const [newCar, setNewCar] = useState(null);
-
+  const [newCar, setNewCar] = useState({});
   const [cars, setCars] = useState(dataCars);
-
   const [bannerShowing, setBannerShowing] = useState(false);
  
   useEffect(() => {
@@ -28,7 +22,6 @@ function App() {
 
   useEffect(() => {
     console.log(cars);
-    alert('newCar added');
   },[cars])
 
   const submitForm = (e) => {
@@ -39,11 +32,27 @@ function App() {
     // setCars(updatedCars);
   }
 
+
+  const deleteCar = (position) => {
+    console.log(position);
+    const updatedCars = cars.splice((position - 1), 1);
+    console.log(updatedCars);
+    // setCars(updatedCars);
+  }
+
   return (
     <div className="App">
-         <h1>Use Effect demo</h1>
+         <h1>Cars</h1>
 
-         {cars.map((car, i) => <p key={i}>{car.make} {car.model && car.model}</p>)}
+         {cars.map((car, i) => {
+          return (
+            <p key={i}>
+              {car.make} {car.model && car.model} { car.id}
+              <button onClick={() => deleteCar(i)}>Delete car</button>
+            </p>
+          )
+          
+         })}
 
          <p>Lorem ipsum dolor sit amet, consectetur 
           adipisicing elit. Illum necessitatibus dolorum 
@@ -52,14 +61,32 @@ function App() {
           quis, inventore veniam esse debitis.</p>
 
           <form onSubmit={submitForm}>
-            <label htmlFor="addCar">Add new car</label>
-            <input 
-            type="text" 
-            id="addCar" 
-            onChange={
-              (e) => setNewCar({...newCar,  make: e.target.value, model: null })
-            }
-            />
+            <div className="form-row">
+
+                <label htmlFor="make">Make:</label>
+                <input 
+                type="text" 
+                id="make" 
+                onChange={
+                  (e) => setNewCar({...newCar,  make: e.target.value, id: !newCar.id ? cars.length + 1 : newCar.id })
+                }
+                />
+
+            </div>
+
+            <div className="form-row">
+
+                <label htmlFor="model">Model:</label>
+                <input 
+                type="text" 
+                id="model" 
+                onChange={
+                  (e) => setNewCar({...newCar,  model: e.target.value, id: !newCar.id ? cars.length + 1 : newCar.id })
+                }
+                />
+
+            </div>
+           
             <button type="submit">Submit</button>
           </form>
 
